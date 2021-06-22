@@ -4,9 +4,10 @@
 
 - Docker
 - Java
+- Maven
 - Jenkins
 - Salack
 - GitHub
 
 ### Escenario 
-Consiste en sumar dos numero. Si se logra la suma devuelve True, caso contrario devuelve False.
+Consiste en sumar dos numero cuyo resultado debe ser mayor o igual a diez.
