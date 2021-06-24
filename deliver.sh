@@ -26,4 +26,4 @@ set -x
 PATH_ACTUAL=`pwd`
 set +x
 echo ${PATH_ACTUAL}
-java -jar target/${NAME}-${VERSION}.jar
+java -jar ${PATH_ACTUAL}/target/${NAME}-${VERSION}.jar
