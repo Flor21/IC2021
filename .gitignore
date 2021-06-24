@@ -3,4 +3,23 @@
 /.settings/
 .classpath
 .project
+/.cache/
+/.java/
+/.lastStarted/
+/config.xml/
+/copy_reference_file.log/
+/hudson.model.UpdateCenter.xml/
+/hudson.plugins.git.GitTool.xml/
+/identity.key.enc/
+/jenkins.telemetry.Correlator.xml/
+/logs/
+/nodeMonitors.xml/
+/plugins/
+/secret.key/
+/secret.key.not-so-secret/
+/secrets/
+/updates/
+/userContent/
+/users/
+/war/
 

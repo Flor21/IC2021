@@ -1,0 +1,15 @@
+version: '3'
+services:
+  master:
+    build: .
+    image: aprenderdevops/jenkins:test
+    restart: unless-stopped
+    hostname: jenkins
+    ports:
+      - "3306:3306"
+      - "3307:3306"
+    volumes:
+      - .:/var/jenkins_home
+ 
+volumes:
+  .:
