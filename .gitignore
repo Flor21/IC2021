@@ -25,4 +25,4 @@ secret.key.not-so-secret
 .bash_history
 queue.xml
 queue.xml.bak
-
+/jenkins_home/
