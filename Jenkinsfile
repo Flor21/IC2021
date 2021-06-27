@@ -26,8 +26,8 @@ pipeline{
             steps{
                 script{
                     try{
+                        slackSend({baseUrl: "https://hooks.slack.com/services/"}, {teamDomain: "https://teamwork-nw17640.slack.com"}, {channel: "#continuous-integration"}, {color: "good"}, {message: "Se ha deployado correctamente"}, {tokenCredentialId: "slack-demo"}, {username: "Team work"}, {botUser: true}, {timestamp: slackResponse.ts})
                         echo "bien"
-                        slackSend(baseUrl: "https://hooks.slack.com/services/", teamDomain: "https://teamwork-nw17640.slack.com", channel: "#continuous-integration", color: "good", message: "Se ha deployado correctamente", tokenCredentialId: "slack-demo", username: "Team work", botUser: true, timestamp: slackResponse.ts)
                     }
                     catch(Exception error){
                         echo "fallo"
