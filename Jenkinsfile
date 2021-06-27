@@ -23,13 +23,7 @@ pipeline{
         }
         stage('Slack Notification'){
             steps{
-                script{
-                    try{
-                        slackSend(channel: "#continuous-integration")
-                    }
-                    catch(Exception error){
-                        sh 'echo ${error}'
-                    }
+                sh 'slackSend(channel: "#continuous-integration")'
                 }
             }
         }
