@@ -30,6 +30,7 @@ pipeline{
                     }
                     catch(Exception error){
                         sh 'echo "fallo"'
+                        currentBuild.result = 'FAILURE'
                     }
                 }
             }
