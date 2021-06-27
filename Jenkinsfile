@@ -28,7 +28,7 @@ pipeline{
                         slackSend(channel: "#continuous-integration")
                     }
                     catch(Exception error){
-                        sh 'echo "job failed"'
+                        sh 'echo ${error}'
                     }
                 }
             }
