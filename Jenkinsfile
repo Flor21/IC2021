@@ -25,7 +25,7 @@ pipeline{
             steps{
                 script{
                     try{
-                        slackSend(channel: "#continuous-integration", attachments: attachments)
+                        slackSend(channel: "#continuous-integration")
                     }
                     catch(Exception error){
                         sh 'echo "job failed"'
