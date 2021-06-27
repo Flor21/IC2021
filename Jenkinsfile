@@ -21,10 +21,6 @@ pipeline{
                 sh './script/deliver.sh'
                } 
         }
-        stage('Slack Notification'){
-            steps{
-                slackSend baseUrl: 'https://hooks.slack.com/services/', channel: '#continuous-integration', color: 'good', message: 'Se ha deployado correctamente', tokenCredentialId: 'slack-demo', username: 'Team work'
-            }
-        }
+        
     }
 }
