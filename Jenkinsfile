@@ -1,4 +1,4 @@
-def slackResponse = slackSend(channel: '#continuous-integration', message: 'Se ha deployado correctamente')
+def slackResponse = slackSend(channel: "#continuous-integration", message: "Se ha deployado correctamente")
 pipeline{
     agent any
     stages{
@@ -26,7 +26,7 @@ pipeline{
             steps{
                 script{
                     try{
-                        slackSend(baseUrl: 'https://hooks.slack.com/services/', channel: '#continuous-integration', color: 'good', message: 'Se ha deployado correctamente', tokenCredentialId: 'slack-demo', username: 'Team work', botUser: true, timestamp: '${slackResponse.ts}')
+                        slackSend(baseUrl: "https://hooks.slack.com/services/", channel: "#continuous-integration", color: "good", message: "Se ha deployado correctamente", tokenCredentialId: "slack-demo", username: "Team work", botUser: true, timestamp: slackResponse.ts)
                         echo "bien"
                     }
                     catch(Exception error){
