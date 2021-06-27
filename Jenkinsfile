@@ -1,4 +1,3 @@
-def slackResponse = slackSend(channel: "#continuous-integration", message: "Se ha deployado correctamente")
 pipeline{
     agent any
     stages{
