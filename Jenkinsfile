@@ -25,7 +25,7 @@ pipeline{
             steps{
                 script{
                     try{
-                        slackSend(channel: "#continuous-integration", color: "good", message: "Se ha deployado correctamente")
+                        slackSend(channel: "#continuous-integration", color: "good", message: "Se ha deployado correctamente", tokenCredentialId: "slack-demo", username: "Team work")
                     }
                     catch(Exception error){
                         sh 'echo "job failed"'
