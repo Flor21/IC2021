@@ -1,11 +1,10 @@
 package ejercicio.prueba;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertTrue;
+import org.springframework.boot.test.context.SpringBootTest;
 
-/**
- * Unit test for simple App.
- */
+@SpringBootTest
 public class AppTest 
 {
     private static App prueba;
