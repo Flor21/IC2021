@@ -27,10 +27,10 @@ pipeline{
                 script{
                     try{
                         slackSend(baseUrl: "https://hooks.slack.com/services/", teamDomain: "https://teamwork-nw17640.slack.com", channel: "#continuous-integration", color: "good", message: "Se ha deployado correctamente", tokenCredentialId: "slack-demo", username: "Team work", botUser: true, timestamp: slackResponse.ts)
-                        echo "bien"
+                        echo "Ha pasado la etapa"
                     }
                     catch(Exception error){
-                        echo "fallo"
+                        echo "Ha fallado la etapa"
                         currentBuild.result = 'FAILURE'
                     }
                 }
