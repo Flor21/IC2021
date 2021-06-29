@@ -26,16 +26,21 @@ public class App
 	//faltaria llamar al metodo
 	@RequestMapping("/resultadoPeticiones")
 	public String formularioPeticiones(@RequestParam Map<String,String> requestParams, Model modelo) {
-	 String n1 = requestParams.get("nro1");
-	 String n2 = requestParams.get("nro2");
+	 String stringNro1 = requestParams.get("nro1");
+	 String stringNro2 = requestParams.get("nro2");
+	 Integer nro1 = Integer.parseInt(stringNro1); 
+	 Integer nro2 = Integer.parseInt(stringNro2);
+	 Boolean resultado = this.sumaMayorADiez(nro1, nro2);
+	 modelo.addAttribute("resultado", resultado);
+	 
 	 return "resultadoPeticiones";
 	 
 	}
 	public static void main(String[] args) {
 		SpringApplication.run(App.class, args);
 	}
-    public static boolean sumaMayorADiez(Integer A, Integer B)
+    public boolean sumaMayorADiez(Integer A, Integer B)
     {
-    	return ( A + B) >=10?true:false;
+    	return ( A + B) >10?true:false;
     }
 }
