@@ -12,6 +12,6 @@ public class AppTest
     @Test
     public void sumarTest()
     {
-    	assertTrue("La suma no es valida porque devuelve un numero menor a diez", prueba.sumaMayorADiez(5, 5));
+    	assertTrue("La suma no es valida porque devuelve un numero menor a diez", prueba.sumaMayorADiez(5, 7));
     }
 }

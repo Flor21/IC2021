@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 @Controller
 @SpringBootApplication
@@ -39,7 +38,7 @@ public class App
 	public static void main(String[] args) {
 		SpringApplication.run(App.class, args);
 	}
-    public boolean sumaMayorADiez(Integer A, Integer B)
+    public static boolean sumaMayorADiez(Integer A, Integer B)
     {
     	return ( A + B) >10?true:false;
     }
