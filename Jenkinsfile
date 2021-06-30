@@ -1,3 +1,6 @@
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+
 def slackResponse = slackSend(channel: "#continuous-integration", message: "Se ha deployado correctamente")
 pipeline{
     agent any
