@@ -83,7 +83,6 @@ def deployToStage(stageName, herokuApp) {
     setDeploymentStatus(id, "pending", "https://${herokuApp}.herokuapp.com/", "Pending deployment to ${stageName}");
     herokuDeploy "${herokuApp}"
     setDeploymentStatus(id, "success", "https://${herokuApp}.herokuapp.com/", "Successfully deployed to ${stageName}");
-    }
 }
 void setDeploymentStatus(deploymentId, state, targetUrl, description) {
     withCredentials([[$class: 'StringBinding', credentialsId: 'GITHUB_TOKEN', variable: 'GITHUB_TOKEN']]) {
