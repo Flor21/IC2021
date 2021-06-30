@@ -54,7 +54,7 @@ void createRelease(tagName, createdAt) {
     withCredentials([[$class: 'StringBinding', credentialsId: 'GITHUB_TOKEN', variable: 'GITHUB_TOKEN']]) {
         def body = "**Created at:** ${createdAt}\n**Deployment job:** [${env.BUILD_NUMBER}](${env.BUILD_URL})\n**Environment:** [<aplicacion-en-keroku>](https://dashboard.heroku.com/apps/<aplicacion-en-keroku>)"
         def payload = JsonOutput.toJson(["tag_name": "v${tagName}", "name": "<aplicacion-en-keroku> - v${tagName}", "body": "${body}"])
-        def apiUrl = "https://api.github.com/repos/${getRepoSlug()}/releases"
+        def apiUrl = "https://api.github.com/repos/Flor21/IC2021}/releases"
         def response = sh(returnStdout: true, script: "curl -s -H \"Authorization: Token ${env.GITHUB_TOKEN}\" -H \"Accept: application/json\" -H \"Content-type: application/json\" -X POST -d '${payload}' ${apiUrl}").trim()
     }
 }
@@ -87,7 +87,7 @@ def deployToStage(stageName, herokuApp) {
 void setDeploymentStatus(deploymentId, state, targetUrl, description) {
     withCredentials([[$class: 'StringBinding', credentialsId: 'GITHUB_TOKEN', variable: 'GITHUB_TOKEN']]) {
         def payload = JsonOutput.toJson(["state": "${state}", "target_url": "${targetUrl}", "description": "${description}"])
-        def apiUrl = "https://api.github.com/repos/${getRepoSlug()}/deployments/${deploymentId}/statuses"
+        def apiUrl = "https://api.github.com/repos/Flor21/IC2021/deployments/${deploymentId}/statuses"
         def response = sh(returnStdout: true, script: "curl -s -H \"Authorization: Token ${env.GITHUB_TOKEN}\" -H \"Accept: application/json\" -H \"Content-type: application/json\" -X POST -d '${payload}' ${apiUrl}").trim()
     }
 }
