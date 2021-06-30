@@ -80,11 +80,15 @@ def getCurrentHerokuReleaseDate(app, version) {
 }
 def deployToStage(stageName, herokuApp) {
     stage name: "Deploy to ${stageName}", concurrency: 1
-    id = createDeployment(getBranch(), "${stageName}", "Deploying branch to ${stageName}")
-    echo "Deployment ID for ${stageName}: ${id}"
-    if (id != null) {
-        setDeploymentStatus(id, "pending", "https://${herokuApp}.herokuapp.com/", "Pending deployment to ${stageName}");
-        herokuDeploy "${herokuApp}"
-        setDeploymentStatus(id, "success", "https://${herokuApp}.herokuapp.com/", "Successfully deployed to ${stageName}");
+    setDeploymentStatus(id, "pending", "https://${herokuApp}.herokuapp.com/", "Pending deployment to ${stageName}");
+    herokuDeploy "${herokuApp}"
+    setDeploymentStatus(id, "success", "https://${herokuApp}.herokuapp.com/", "Successfully deployed to ${stageName}");
+    }
+}
+void setDeploymentStatus(deploymentId, state, targetUrl, description) {
+    withCredentials([[$class: 'StringBinding', credentialsId: 'GITHUB_TOKEN', variable: 'GITHUB_TOKEN']]) {
+        def payload = JsonOutput.toJson(["state": "${state}", "target_url": "${targetUrl}", "description": "${description}"])
+        def apiUrl = "https://api.github.com/repos/${getRepoSlug()}/deployments/${deploymentId}/statuses"
+        def response = sh(returnStdout: true, script: "curl -s -H \"Authorization: Token ${env.GITHUB_TOKEN}\" -H \"Accept: application/json\" -H \"Content-type: application/json\" -X POST -d '${payload}' ${apiUrl}").trim()
     }
 }
