@@ -78,3 +78,13 @@ def getCurrentHerokuReleaseDate(app, version) {
         return data.created_at
     }
 }
+def deployToStage(stageName, herokuApp) {
+    stage name: "Deploy to ${stageName}", concurrency: 1
+    id = createDeployment(getBranch(), "${stageName}", "Deploying branch to ${stageName}")
+    echo "Deployment ID for ${stageName}: ${id}"
+    if (id != null) {
+        setDeploymentStatus(id, "pending", "https://${herokuApp}.herokuapp.com/", "Pending deployment to ${stageName}");
+        herokuDeploy "${herokuApp}"
+        setDeploymentStatus(id, "success", "https://${herokuApp}.herokuapp.com/", "Successfully deployed to ${stageName}");
+    }
+}
