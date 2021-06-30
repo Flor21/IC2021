@@ -17,11 +17,6 @@ pipeline{
                 }
             }
         }
-        stage('Deliver'){
-        	steps{
-                sh './script/deliver.sh'
-               } 
-        }
         stage('Slack Notification'){
             steps{
                 script{
