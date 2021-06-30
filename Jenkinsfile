@@ -1,5 +1,4 @@
 def slackResponse = slackSend(channel: "#continuous-integration", message: "Se ha deployado correctamente")
-HEROKU_PRODUCTION=<aplicacion-en-keroku>
 pipeline{
     agent any
     stages{
@@ -20,11 +19,11 @@ pipeline{
         }
         stages('Deploy'){
         	steps{
-        		herokuApp = "${env.HEROKU_PRODUCTION}"
+        		herokuApp = "<aplicacion-en-keroku>"
 				step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar', fingerprint: true])
 				deployToStage("production", herokuApp)
-				def version = getCurrentHerokuReleaseVersion("${env.HEROKU_PRODUCTION}")
-				def createdAt = getCurrentHerokuReleaseDate("${env.HEROKU_PRODUCTION}", version)
+				def version = getCurrentHerokuReleaseVersion("<aplicacion-en-keroku>")
+				def createdAt = getCurrentHerokuReleaseDate("<aplicacion-en-keroku>", version)
 				echo "Release version: ${version}"
 				createRelease(version, createdAt)
         	}
@@ -48,8 +47,8 @@ pipeline{
 
 void createRelease(tagName, createdAt) {
     withCredentials([[$class: 'StringBinding', credentialsId: 'GITHUB_TOKEN', variable: 'GITHUB_TOKEN']]) {
-        def body = "**Created at:** ${createdAt}\n**Deployment job:** [${env.BUILD_NUMBER}](${env.BUILD_URL})\n**Environment:** [${env.HEROKU_PRODUCTION}](https://dashboard.heroku.com/apps/${env.HEROKU_PRODUCTION})"
-        def payload = JsonOutput.toJson(["tag_name": "v${tagName}", "name": "${env.HEROKU_PRODUCTION} - v${tagName}", "body": "${body}"])
+        def body = "**Created at:** ${createdAt}\n**Deployment job:** [${env.BUILD_NUMBER}](${env.BUILD_URL})\n**Environment:** [<aplicacion-en-keroku>](https://dashboard.heroku.com/apps/<aplicacion-en-keroku>)"
+        def payload = JsonOutput.toJson(["tag_name": "v${tagName}", "name": "<aplicacion-en-keroku> - v${tagName}", "body": "${body}"])
         def apiUrl = "https://api.github.com/repos/${getRepoSlug()}/releases"
         def response = sh(returnStdout: true, script: "curl -s -H \"Authorization: Token ${env.GITHUB_TOKEN}\" -H \"Accept: application/json\" -H \"Content-type: application/json\" -X POST -d '${payload}' ${apiUrl}").trim()
     }
