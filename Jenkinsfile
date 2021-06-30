@@ -17,15 +17,17 @@ pipeline{
                 }
             }
         }
-        stages('Deploy'){
+        stage('Deploy'){
         	steps{
-        		herokuApp = "<aplicacion-en-keroku>"
-				step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar', fingerprint: true])
-				deployToStage("production", herokuApp)
-				def version = getCurrentHerokuReleaseVersion("<aplicacion-en-keroku>")
-				def createdAt = getCurrentHerokuReleaseDate("<aplicacion-en-keroku>", version)
-				echo "Release version: ${version}"
-				createRelease(version, createdAt)
+	        	script{
+	        		herokuApp = "<aplicacion-en-keroku>"
+					step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar', fingerprint: true])
+					deployToStage("production", herokuApp)
+					def version = getCurrentHerokuReleaseVersion("<aplicacion-en-keroku>")
+					def createdAt = getCurrentHerokuReleaseDate("<aplicacion-en-keroku>", version)
+					echo "Release version: ${version}"
+					createRelease(version, createdAt)
+				}
         	}
         }
         stage('Slack Notification'){
