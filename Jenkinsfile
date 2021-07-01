@@ -29,7 +29,8 @@ pipeline{
 				     def id = createDeployment(getBranch(), "production", "Deploying branch to master")
 				     echo "YA SETE EL ID"
 				    setDeploymentStatus(id, "pending", "https://${herokuApp}.herokuapp.com/", "Pending deployment to");
-				    herokuDeploy("${herokuApp}");
+				    echo "Entrando a herokuDeply"
+				    herokuDeploy(herokuApp);
 				    setDeploymentStatus(id, "success", "https://${herokuApp}.herokuapp.com/", "Successfully deployed to");
 					
 					echo "estoy por tarer el version"
@@ -120,7 +121,7 @@ def getBranch() {
     return "${branch}"
 }
 def herokuDeploy (herokuApp) {
-	echo "HEROKUAPP ${data}"
+	echo "HEROKUAPP ${herokuApp}"
     withCredentials([sshUserPrivateKey(credentialsId: '66213ced-1975-435d-874e-61038630eefa', keyFileVariable: 'HEROKU_API_KEY')]) {
        sh 'mvn "heroku:deploy -DskipTests=true -Dmaven.javadoc.skip=true -B -V -D heroku.appName=${herokuApp}"' 
     }
