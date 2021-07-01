@@ -26,7 +26,9 @@ pipeline{
 	        		herokuApp = "aplicacion-en-keroku"
 					step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar', fingerprint: true])
 					deployToStage("production", herokuApp)
+					echo "estoy por tarer el version"
 					def version = getCurrentHerokuReleaseVersion("aplicacion-en-keroku")
+					echo "estoy por tarer el ${version}"
 					def createdAt = getCurrentHerokuReleaseDate("aplicacion-en-keroku", version)
 					echo "Release version: ${version}"
 					createRelease(version, createdAt)
@@ -51,6 +53,7 @@ pipeline{
 }
 
 void createRelease(tagName, createdAt) {
+	echo "estoy createRelease"
     withCredentials([[$class: 'StringBinding', credentialsId: 'GITHUB_TOKEN', variable: 'GITHUB_TOKEN']]) {
         def body = "**Created at:** ${createdAt}\n**Deployment job:** [${env.BUILD_NUMBER}](${env.BUILD_URL})\n**Environment:** [aplicacion-en-keroku](https://dashboard.heroku.com/apps/aplicacion-en-keroku)"
         def payload = JsonOutput.toJson(["tag_name": "v${tagName}", "name": "aplicacion-en-keroku - v${tagName}", "body": "${body}"])
@@ -60,6 +63,7 @@ void createRelease(tagName, createdAt) {
 }
 
 def getCurrentHerokuReleaseVersion(app) {
+	echo "estoy getCurrentHerokuReleaseVersion"
     withCredentials([[$class: 'StringBinding', credentialsId: 'HEROKU_API_KEY', variable: 'HEROKU_API_KEY']]) {
         def apiUrl = "https://api.heroku.com/apps/${app}/dynos"
         def response = sh(returnStdout: true, script: "curl -s  -H \"Authorization: Bearer ${env.HEROKU_API_KEY}\" -H \"Accept: application/vnd.heroku+json; version=3\" -X GET ${apiUrl}").trim()
@@ -70,6 +74,7 @@ def getCurrentHerokuReleaseVersion(app) {
 }
 
 def getCurrentHerokuReleaseDate(app, version) {
+	echo "estoy getCurrentHerokuReleaseDate"
     withCredentials([[$class: 'StringBinding', credentialsId: 'HEROKU_API_KEY', variable: 'HEROKU_API_KEY']]) {
         def apiUrl = "https://api.heroku.com/apps/${app}/releases/${version}"
         def response = sh(returnStdout: true, script: "curl -s  -H \"Authorization: Bearer ${env.HEROKU_API_KEY}\" -H \"Accept: application/vnd.heroku+json; version=3\" -X GET ${apiUrl}").trim()
@@ -81,11 +86,13 @@ def getCurrentHerokuReleaseDate(app, version) {
 def deployToStage(stageName, herokuApp) {
     stage name: "Deploy to ${stageName}", concurrency: 1
      def id = createDeployment(master, "production", "Deploying branch to master")
+     echo "YA SETE EL ID"
     setDeploymentStatus(id, "pending", "https://${herokuApp}.herokuapp.com/", "Pending deployment to ${stageName}");
     herokuDeploy "${herokuApp}"
     setDeploymentStatus(id, "success", "https://${herokuApp}.herokuapp.com/", "Successfully deployed to ${stageName}");
 }
 void setDeploymentStatus(deploymentId, state, targetUrl, description) {
+	echo "estoy setDeploymentStatus"
     withCredentials([[$class: 'StringBinding', credentialsId: 'GITHUB_TOKEN', variable: 'GITHUB_TOKEN']]) {
         def payload = JsonOutput.toJson(["state": "${state}", "target_url": "${targetUrl}", "description": "${description}"])
         def apiUrl = "https://api.github.com/repos/Flor21/IC2021/deployments/${deploymentId}/statuses"
@@ -93,6 +100,7 @@ void setDeploymentStatus(deploymentId, state, targetUrl, description) {
     }
 }
 def createDeployment(ref, environment, description) {
+	echo "estoy createDeployment"
     withCredentials([[$class: 'StringBinding', credentialsId: 'GITHUB_TOKEN', variable: 'GITHUB_TOKEN']]) {
         def payload = JsonOutput.toJson(["ref": "${ref}", "description": "${description}", "environment": "${environment}", "required_contexts": []])
         def apiUrl = "https://api.github.com/repos/Flor21/IC2021/deployments"
