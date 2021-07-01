@@ -71,7 +71,7 @@ void createRelease(tagName, createdAt) {
 
 def getCurrentHerokuReleaseVersion(app) {
 	echo "estoy getCurrentHerokuReleaseVersion"
-    withCredentials([sshUserPrivateKey(credentialsId: '66213ced-1975-435d-874e-61038630eefa', keyFileVariable: 'HEROKU_API_KEY')]) {
+    
         def apiUrl = "https://api.heroku.com/apps/${app}/dynos"
         def response = sh(returnStdout: true, script: "curl -s  -H \"Authorization: Bearer ${env.HEROKU_API_KEY}\" -H \"Accept: application/vnd.heroku+json; version=3\" -X GET ${apiUrl}").trim()
         echo "response es ${response}"
@@ -79,18 +79,17 @@ def getCurrentHerokuReleaseVersion(app) {
         def data = jsonSlurper.parseText("${response}")
         echo "data es ${data}"
         return data[0].release.version
-    }
+    
 }
 
 def getCurrentHerokuReleaseDate(app, version) {
 	echo "estoy getCurrentHerokuReleaseDate"
-    withCredentials([sshUserPrivateKey(credentialsId: '66213ced-1975-435d-874e-61038630eefa', keyFileVariable: 'HEROKU_API_KEY')]) {
         def apiUrl = "https://api.heroku.com/apps/${app}/releases/${version}"
         def response = sh(returnStdout: true, script: "curl -s  -H \"Authorization: Bearer ${env.HEROKU_API_KEY}\" -H \"Accept: application/vnd.heroku+json; version=3\" -X GET ${apiUrl}").trim()
         def jsonSlurper = new JsonSlurper()
         def data = jsonSlurper.parseText("${response}")
         return data.created_at
-    }
+    
 }
 
 void setDeploymentStatus(deploymentId, state, targetUrl, description) {
