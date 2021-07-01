@@ -70,7 +70,7 @@ void createRelease(tagName, createdAt) {
 
 def getCurrentHerokuReleaseVersion(app) {
 	echo "estoy getCurrentHerokuReleaseVersion"
-    withCredentials([[$class: 'StringBinding', credentialsId: 'HEROKU_API_KEY', variable: 'HEROKU_API_KEY']]) {
+    withCredentials([[$class: 'StringBinding', credentialsId: '66213ced-1975-435d-874e-61038630eefa', variable: 'HEROKU_API_KEY']]) {
         def apiUrl = "https://api.heroku.com/apps/${app}/dynos"
         def response = sh(returnStdout: true, script: "curl -s  -H \"Authorization: Bearer ${env.HEROKU_API_KEY}\" -H \"Accept: application/vnd.heroku+json; version=3\" -X GET ${apiUrl}").trim()
         def jsonSlurper = new JsonSlurper()
@@ -81,7 +81,7 @@ def getCurrentHerokuReleaseVersion(app) {
 
 def getCurrentHerokuReleaseDate(app, version) {
 	echo "estoy getCurrentHerokuReleaseDate"
-    withCredentials([[$class: 'StringBinding', credentialsId: 'HEROKU_API_KEY', variable: 'HEROKU_API_KEY']]) {
+    withCredentials([[$class: 'StringBinding', credentialsId: '66213ced-1975-435d-874e-61038630eefa', variable: 'HEROKU_API_KEY']]) {
         def apiUrl = "https://api.heroku.com/apps/${app}/releases/${version}"
         def response = sh(returnStdout: true, script: "curl -s  -H \"Authorization: Bearer ${env.HEROKU_API_KEY}\" -H \"Accept: application/vnd.heroku+json; version=3\" -X GET ${apiUrl}").trim()
         def jsonSlurper = new JsonSlurper()
@@ -115,4 +115,9 @@ def getBranch() {
     tokens = "${env.JOB_NAME}".tokenize('/')
     branch = tokens[tokens.size()-1]
     return "${branch}"
+}
+def herokuDeploy (herokuApp) {
+    withCredentials([[$class: 'StringBinding', credentialsId: '66213ced-1975-435d-874e-61038630eefa', variable: 'HEROKU_API_KEY']]) {
+        mvn "heroku:deploy -DskipTests=true -Dmaven.javadoc.skip=true -B -V -D heroku.appName=${herokuApp}"
+    }
 }
