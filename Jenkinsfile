@@ -80,6 +80,7 @@ def getCurrentHerokuReleaseDate(app, version) {
 }
 def deployToStage(stageName, herokuApp) {
     stage name: "Deploy to ${stageName}", concurrency: 1
+     def id = createDeployment(master, "production", "Deploying branch to master")
     setDeploymentStatus(id, "pending", "https://${herokuApp}.herokuapp.com/", "Pending deployment to ${stageName}");
     herokuDeploy "${herokuApp}"
     setDeploymentStatus(id, "success", "https://${herokuApp}.herokuapp.com/", "Successfully deployed to ${stageName}");
@@ -89,5 +90,15 @@ void setDeploymentStatus(deploymentId, state, targetUrl, description) {
         def payload = JsonOutput.toJson(["state": "${state}", "target_url": "${targetUrl}", "description": "${description}"])
         def apiUrl = "https://api.github.com/repos/Flor21/IC2021/deployments/${deploymentId}/statuses"
         def response = sh(returnStdout: true, script: "curl -s -H \"Authorization: Token ${env.GITHUB_TOKEN}\" -H \"Accept: application/json\" -H \"Content-type: application/json\" -X POST -d '${payload}' ${apiUrl}").trim()
+    }
+}
+def createDeployment(ref, environment, description) {
+    withCredentials([[$class: 'StringBinding', credentialsId: 'GITHUB_TOKEN', variable: 'GITHUB_TOKEN']]) {
+        def payload = JsonOutput.toJson(["ref": "${ref}", "description": "${description}", "environment": "${environment}", "required_contexts": []])
+        def apiUrl = "https://api.github.com/repos/Flor21/IC2021/deployments"
+        def response = sh(returnStdout: true, script: "curl -s -H \"Authorization: Token ${env.GITHUB_TOKEN}\" -H \"Accept: application/json\" -H \"Content-type: application/json\" -X POST -d '${payload}' ${apiUrl}").trim()
+        def jsonSlurper = new JsonSlurper()
+        def data = jsonSlurper.parseText("${response}")
+        return data.id
     }
 }
