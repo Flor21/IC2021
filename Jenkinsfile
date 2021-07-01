@@ -118,7 +118,7 @@ def getBranch() {
     return "${branch}"
 }
 def herokuDeploy (herokuApp) {
-    withCredentials([[$class: 'StringBinding', credentialsId: '66213ced-1975-435d-874e-61038630eefa', variable: 'HEROKU_API_KEY']]) {
+    withCredentials([sshUserPrivateKey(credentialsId: '66213ced-1975-435d-874e-61038630eefa', keyFileVariable: 'HEROKU_API_KEY')]) {
         mvn "heroku:deploy -DskipTests=true -Dmaven.javadoc.skip=true -B -V -D heroku.appName=${herokuApp}"
     }
 }
