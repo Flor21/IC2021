@@ -29,7 +29,7 @@ pipeline{
 				     def id = createDeployment(getBranch(), "production", "Deploying branch to master")
 				     echo "YA SETE EL ID"
 				    setDeploymentStatus(id, "pending", "https://${herokuApp}.herokuapp.com/", "Pending deployment to");
-				    herokuDeploy "${herokuApp}"
+				    herokuDeploy("${herokuApp}");
 				    setDeploymentStatus(id, "success", "https://${herokuApp}.herokuapp.com/", "Successfully deployed to");
 					
 					echo "estoy por tarer el version"
@@ -70,7 +70,7 @@ void createRelease(tagName, createdAt) {
 
 def getCurrentHerokuReleaseVersion(app) {
 	echo "estoy getCurrentHerokuReleaseVersion"
-    withCredentials([[$class: 'StringBinding', credentialsId: '66213ced-1975-435d-874e-61038630eefa', variable: 'HEROKU_API_KEY']]) {
+    withCredentials([sshUserPrivateKey(credentialsId: '66213ced-1975-435d-874e-61038630eefa', keyFileVariable: 'HEROKU_API_KEY')]) {
         def apiUrl = "https://api.heroku.com/apps/${app}/dynos"
         def response = sh(returnStdout: true, script: "curl -s  -H \"Authorization: Bearer ${env.HEROKU_API_KEY}\" -H \"Accept: application/vnd.heroku+json; version=3\" -X GET ${apiUrl}").trim()
         def jsonSlurper = new JsonSlurper()
@@ -81,7 +81,7 @@ def getCurrentHerokuReleaseVersion(app) {
 
 def getCurrentHerokuReleaseDate(app, version) {
 	echo "estoy getCurrentHerokuReleaseDate"
-    withCredentials([[$class: 'StringBinding', credentialsId: '66213ced-1975-435d-874e-61038630eefa', variable: 'HEROKU_API_KEY']]) {
+    withCredentials([sshUserPrivateKey(credentialsId: '66213ced-1975-435d-874e-61038630eefa', keyFileVariable: 'HEROKU_API_KEY')]) {
         def apiUrl = "https://api.heroku.com/apps/${app}/releases/${version}"
         def response = sh(returnStdout: true, script: "curl -s  -H \"Authorization: Bearer ${env.HEROKU_API_KEY}\" -H \"Accept: application/vnd.heroku+json; version=3\" -X GET ${apiUrl}").trim()
         def jsonSlurper = new JsonSlurper()
@@ -120,6 +120,7 @@ def getBranch() {
     return "${branch}"
 }
 def herokuDeploy (herokuApp) {
+	echo "HEROKUAPP ${data}"
     withCredentials([sshUserPrivateKey(credentialsId: '66213ced-1975-435d-874e-61038630eefa', keyFileVariable: 'HEROKU_API_KEY')]) {
        sh 'mvn "heroku:deploy -DskipTests=true -Dmaven.javadoc.skip=true -B -V -D heroku.appName=${herokuApp}"' 
     }
