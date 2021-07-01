@@ -100,7 +100,7 @@ void setDeploymentStatus(deploymentId, state, targetUrl, description) {
 }
 def createDeployment(ref, environment, description) {
 	echo "estoy createDeployment"
-    withCredentials([usernamePassword(credentialsId: 'credencialGitHub', usernameVariable: 'credencialGitHub', passwordVariable: 'GITHUB_TOKEN']]) {
+    withCredentials([usernamePassword(credentialsId: 'credencialGitHub', usernameVariable: 'credencialGitHub', passwordVariable: 'GITHUB_TOKEN']) {
         def payload = JsonOutput.toJson(["ref": "${ref}", "description": "${description}", "environment": "${environment}", "required_contexts": []])
         echo "estoy por entrar a apiURL"
         def apiUrl = "https://api.github.com/repos/Flor21/IC2021/deployments"
