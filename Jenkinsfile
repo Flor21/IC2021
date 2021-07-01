@@ -124,6 +124,6 @@ def herokuDeploy (herokuApp) {
 	echo "HEROKUAPP ${herokuApp}"
     withCredentials([sshUserPrivateKey(credentialsId: '66213ced-1975-435d-874e-61038630eefa', keyFileVariable: 'HEROKU_API_KEY')]) {
        sh 'mvn clean -U install'
-       sh 'mvn "heroku:deploy -DskipTests=true -Dmaven.javadoc.skip=true -B -V -D heroku.appName=${herokuApp}"' 
+       sh 'mvn clean heroku:deploy-war' 
     }
 }
