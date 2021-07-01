@@ -25,8 +25,8 @@ pipeline{
 	        	script{
 	        		herokuApp = "aplicacion-en-keroku"
 					step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar', fingerprint: true])
-					
-				     def id = createDeployment(master, "production", "Deploying branch to master")
+					echo "tratando de setear el id"
+				     def id = createDeployment(getBranch(), "production", "Deploying branch to master")
 				     echo "YA SETE EL ID"
 				    setDeploymentStatus(id, "pending", "https://${herokuApp}.herokuapp.com/", "Pending deployment to");
 				    herokuDeploy "${herokuApp}"
@@ -108,4 +108,9 @@ def createDeployment(ref, environment, description) {
         def data = jsonSlurper.parseText("${response}")
         return data.id
     }
+}
+def getBranch() {
+    tokens = "${env.JOB_NAME}".tokenize('/')
+    branch = tokens[tokens.size()-1]
+    return "${branch}"
 }
