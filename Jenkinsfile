@@ -122,7 +122,8 @@ def getBranch() {
 }
 def herokuDeploy (herokuApp) {
 	echo "HEROKUAPP ${herokuApp}"
-    withCredentials([[$class: 'StringBinding', credentialsId: 'HEROKU_API_KEY', variable: 'HEROKU_API_KEY']]) {
+    withCredentials([sshUserPrivateKey(credentialsId: '66213ced-1975-435d-874e-61038630eefa', keyFileVariable: 'HEROKU_API_KEY')]) {
+    echo "HEROKUAPP ${keyFileVariable}"
        sh 'mvn clean -U install'
        sh 'mvn clean heroku:deploy' 
     }
