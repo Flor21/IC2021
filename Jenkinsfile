@@ -26,6 +26,13 @@ pipeline{
 	        		herokuApp = "aplicacion-en-keroku"
 					step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar', fingerprint: true])
 					deployToStage("production", herokuApp)
+					
+				     def id = createDeployment(master, "production", "Deploying branch to master")
+				     echo "YA SETE EL ID"
+				    setDeploymentStatus(id, "pending", "https://${herokuApp}.herokuapp.com/", "Pending deployment to");
+				    herokuDeploy "${herokuApp}"
+				    setDeploymentStatus(id, "success", "https://${herokuApp}.herokuapp.com/", "Successfully deployed to");
+					
 					echo "estoy por tarer el version"
 					def version = getCurrentHerokuReleaseVersion("aplicacion-en-keroku")
 					echo "estoy por tarer el ${version}"
@@ -83,14 +90,7 @@ def getCurrentHerokuReleaseDate(app, version) {
         return data.created_at
     }
 }
-def deployToStage(stageName, herokuApp) {
-    stage name: "Deploy to ${stageName}", concurrency: 1
-     def id = createDeployment(master, "production", "Deploying branch to master")
-     echo "YA SETE EL ID"
-    setDeploymentStatus(id, "pending", "https://${herokuApp}.herokuapp.com/", "Pending deployment to ${stageName}");
-    herokuDeploy "${herokuApp}"
-    setDeploymentStatus(id, "success", "https://${herokuApp}.herokuapp.com/", "Successfully deployed to ${stageName}");
-}
+
 void setDeploymentStatus(deploymentId, state, targetUrl, description) {
 	echo "estoy setDeploymentStatus"
     withCredentials([[$class: 'StringBinding', credentialsId: 'GITHUB_TOKEN', variable: 'GITHUB_TOKEN']]) {
