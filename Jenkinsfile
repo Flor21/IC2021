@@ -33,12 +33,7 @@ pipeline{
 				    herokuDeploy(herokuApp);
 				    setDeploymentStatus(id, "success", "https://${herokuApp}.herokuapp.com/", "Successfully deployed to");
 					
-					echo "estoy por tarer el version"
-					def version = getCurrentHerokuReleaseVersion("aplicacion-en-keroku")
-					echo "estoy por tarer el ${version}"
-					def createdAt = getCurrentHerokuReleaseDate("aplicacion-en-keroku", version)
-					echo "Release version: ${version}"
-					createRelease(version, createdAt)
+					echo "TERMINADO"
 				}
         	}
         }
@@ -59,38 +54,6 @@ pipeline{
     }
 }
 
-void createRelease(tagName, createdAt) {
-	echo "estoy createRelease"
-    withCredentials([usernamePassword(credentialsId: '40654175-15aa-4c01-b97a-1a7757e599d8', usernameVariable: 'credencialGitHub', passwordVariable: 'GITHUB_TOKEN')]) {
-        def body = "**Created at:** ${createdAt}\n**Deployment job:** [${env.BUILD_NUMBER}](${env.BUILD_URL})\n**Environment:** [aplicacion-en-keroku](https://dashboard.heroku.com/apps/aplicacion-en-keroku)"
-        def payload = JsonOutput.toJson(["tag_name": "v${tagName}", "name": "aplicacion-en-keroku - v${tagName}", "body": "${body}"])
-        def apiUrl = "https://api.github.com/repos/Flor21/IC2021}/releases"
-        def response = sh(returnStdout: true, script: "curl -s -H \"Authorization: Token ${env.GITHUB_TOKEN}\" -H \"Accept: application/json\" -H \"Content-type: application/json\" -X POST -d '${payload}' ${apiUrl}").trim()
-    }
-}
-
-def getCurrentHerokuReleaseVersion(app) {
-	echo "estoy getCurrentHerokuReleaseVersion"
-    
-        def apiUrl = "https://api.heroku.com/apps/${app}/dynos"
-        def response = sh(returnStdout: true, script: "curl -s  -H \"Authorization: Bearer ${env.HEROKU_API_KEY}\" -H \"Accept: application/vnd.heroku+json; version=3\" -X GET ${apiUrl}").trim()
-        echo "response es ${response}"
-        def jsonSlurper = new JsonSlurper()
-        def data = jsonSlurper.parseText("${response}")
-        echo "data es ${data}"
-        return data[0].release.version
-    
-}
-
-def getCurrentHerokuReleaseDate(app, version) {
-	echo "estoy getCurrentHerokuReleaseDate"
-        def apiUrl = "https://api.heroku.com/apps/${app}/releases/${version}"
-        def response = sh(returnStdout: true, script: "curl -s  -H \"Authorization: Bearer ${env.HEROKU_API_KEY}\" -H \"Accept: application/vnd.heroku+json; version=3\" -X GET ${apiUrl}").trim()
-        def jsonSlurper = new JsonSlurper()
-        def data = jsonSlurper.parseText("${response}")
-        return data.created_at
-    
-}
 
 void setDeploymentStatus(deploymentId, state, targetUrl, description) {
 	echo "estoy setDeploymentStatus"
