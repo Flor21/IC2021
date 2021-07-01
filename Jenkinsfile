@@ -108,7 +108,9 @@ def createDeployment(ref, environment, description) {
         def response = sh(returnStdout: true, script: "curl -s -H \"Authorization: Token ${env.GITHUB_TOKEN}\" -H \"Accept: application/json\" -H \"Content-type: application/json\" -X POST -d '${payload}' ${apiUrl}").trim()
         echo "${response}"
         def jsonSlurper = new JsonSlurper()
+        echo "INSTANCIADO JsonSlurper"
         def data = jsonSlurper.parseText("${response}")
+        echo "JsonSlurper ${data}"
         return data.id
     }
 }
