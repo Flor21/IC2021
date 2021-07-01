@@ -123,5 +123,5 @@ def getBranch() {
 def herokuDeploy (herokuApp) {
 	echo "HEROKUAPP ${herokuApp}"
 	sh 'mvn clean -U install'
-	sh 'mvn clean heroku:deploy' 
+	sh 'mvn heroku:deploy -Dheroku.appName=${herokuApp}' 
 }
