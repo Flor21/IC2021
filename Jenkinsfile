@@ -25,7 +25,6 @@ pipeline{
 	        	script{
 	        		herokuApp = "aplicacion-en-keroku"
 					step([$class: 'ArtifactArchiver', artifacts: '**/target/*.jar', fingerprint: true])
-					deployToStage("production", herokuApp)
 					
 				     def id = createDeployment(master, "production", "Deploying branch to master")
 				     echo "YA SETE EL ID"
