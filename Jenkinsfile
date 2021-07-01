@@ -105,6 +105,7 @@ def createDeployment(ref, environment, description) {
         echo "estoy por entrar a apiURL"
         def apiUrl = "https://api.github.com/repos/Flor21/IC2021/deployments"
         def response = sh(returnStdout: true, script: "curl -s -H \"Authorization: Token ${env.GITHUB_TOKEN}\" -H \"Accept: application/json\" -H \"Content-type: application/json\" -X POST -d '${payload}' ${apiUrl}").trim()
+        echo "${response}"
         def jsonSlurper = new JsonSlurper()
         def data = jsonSlurper.parseText("${response}")
         return data.id
